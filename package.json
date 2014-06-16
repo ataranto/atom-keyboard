@@ -1,5 +1,5 @@
 {
-  "name" : "keyboard",
+  "name" : "atom-keyboard",
   "main" : "src/main.js",
   "version" : "0.0.1",
   "dependencies" : {
