@@ -1,19 +1,19 @@
-#include "nan.h"
+#include <nan.h>
 using namespace v8;
-
-#include "keyboard.h"
 
 namespace {
 
 NAN_METHOD(Foo) {
+  printf("Foo()\n");
   NanScope();
-  printf("Foo");
-  NanReturnValue(Integer::New(42));
+
+  NanReturnValue(NanNew<Number>(2));
 }
 
 void Init(Handle<Object> exports) {
-  printf("Init");
-  NODE_SET_METHOD(exports, "keyboard", Foo);
+  printf("Init()\n");
+  exports->Set(NanSymbol("foo"),
+    NanNew<FunctionTemplate>(Foo)->GetFunction());
 }
 
 }  // namespace
