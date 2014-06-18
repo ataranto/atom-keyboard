@@ -1,7 +1,5 @@
 (function() {
   var keyboard = require('bindings')('keyboard.node');
 
-  module.exports = function(command, args, options) {
-    return keyboard.keyboard(command, args, options);
-  };
+  module.exports.foo = keyboard.foo;
 }).call(this);
