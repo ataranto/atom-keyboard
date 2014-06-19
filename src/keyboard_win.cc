@@ -3,7 +3,11 @@
 static HHOOK g_hhook;
 
 LRESULT CALLBACK KeyboardProc(int code, WPARAM wParam, LPARAM lParam) {
-  printf("code: %d\n", code);
+  printf("code: %d, wParam: %d, lParam: %d\n", code, wParam, lParam);
+
+  if (wParam == WM_KEYDOWN) {
+    printf("WM_KEYDOWN\n");
+  }
 
   return CallNextHookEx(g_hhook, code, wParam, lParam);
 }
