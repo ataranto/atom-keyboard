@@ -1,5 +1,5 @@
 (function() {
   var keyboard = require('bindings')('keyboard.node');
 
-  module.exports.foo = keyboard.foo;
+  module.exports.setCallback = keyboard.setCallback;
 }).call(this);
