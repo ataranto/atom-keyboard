@@ -1,21 +1,10 @@
-#include <nan.h>
-using namespace v8;
-
-namespace {
-
-NAN_METHOD(Foo) {
-  printf("Foo()\n");
-  NanScope();
-
-  NanReturnValue(2);
-}
+#include "common.h"
 
 void Init(Handle<Object> exports) {
-  printf("Init()\n");
+  CommonInit();
+  PlatformInit();
 
-  NODE_SET_METHOD(exports, "foo", Foo);
+  NODE_SET_METHOD(exports, "setCallback", SetCallback);
 }
-
-}  // namespace
 
 NODE_MODULE(keyboard, Init)
