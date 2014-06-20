@@ -16,6 +16,7 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
 
   if (!g_callback.IsEmpty()) {
     Handle<String> key;
+    printf("MakeCallbackInMainThread, g_key: %d\n", g_key);
     switch (g_key) {
       case KEY_PLAYPAUSE:
         key = String::New("media-play-pause");
@@ -52,7 +53,9 @@ void WaitForMainThread() {
 }
 
 void WakeupNewThread() {
+  printf("WakeupNewThread before\n");
   uv_sem_post(&g_semaphore);
+  printf("WakeupNewThread after\n");
 }
 
 void PostKeyAndWait(KEY_TYPE key)
