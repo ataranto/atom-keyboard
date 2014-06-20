@@ -58,6 +58,7 @@ void WakeupNewThread() {
 void PostKeyAndWait(KEY_TYPE key)
 {
   g_key = key;
+  printf("PostKeyAndWait: %d\n", key);
 
   uv_async_send(&g_async);
   WaitForMainThread();

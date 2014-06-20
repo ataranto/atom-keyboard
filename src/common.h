@@ -8,6 +8,7 @@ void CommonInit();
 void PlatformInit();
 
 enum KEY_TYPE {
+    KEY_NONE,
     KEY_PLAYPAUSE,
     KEY_PREVIOUS,
     KEY_NEXT,
