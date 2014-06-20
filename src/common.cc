@@ -37,6 +37,8 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
     };
     NanPersistentToLocal(g_callback)->Call(
         Context::GetCurrent()->Global(), 1, argv);
+  } else {
+    printf("g_callback.IsEmpty() == true");
   }
 
   WakeupNewThread();
