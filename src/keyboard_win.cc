@@ -5,6 +5,9 @@ static HHOOK g_hhook;
 LRESULT CALLBACK KeyboardProc(int code, WPARAM wParam, LPARAM lParam) {
   printf("code: %d, wParam: %d, lParam: %d\n", code, wParam, lParam);
 
+  tagKBDLLHOOKSTRUCT *s = (tagKBDLLHOOKSTRUCT *)lParam;
+  printf("vkCode: %d\n", s->vkCode);
+
   if (wParam == WM_KEYDOWN) {
     printf("WM_KEYDOWN\n");
   }
