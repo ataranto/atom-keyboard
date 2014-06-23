@@ -44,7 +44,7 @@ void PostKey(KEY_TYPE key)
 {
   printf("PostKey: %d\n", key);
 
-  void *data = (void *)&key;
+  void *data = (void *)key;
   printf("data1: %d", *(KEY_TYPE *)data);
   g_async.data = data;
 
