@@ -1,5 +1,6 @@
 #include "common.h"
 
+static KEY_TYPE g_key;
 static uv_rwlock_t g_lock;
 static uv_async_t g_async;
 static Persistent<Function> g_callback;
@@ -9,12 +10,10 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
 
   if (!g_callback.IsEmpty()) {
     uv_rwlock_rdlock(&g_lock);
-    KEY_TYPE key_type = *(KEY_TYPE *)g_async.data;
-    printf("MakeCallbackInMainThread key_type: %d\n", key_type);
-    uv_rwlock_rdunlock(&g_lock);
+    printf("MakeCallbackInMainThread, g_key: %d\n", g_key);
 
     Handle<String> key;
-    switch (key_type) {
+    switch (g_key) {
       case KEY_PLAYPAUSE:
         key = String::New("media-play-pause");
         break;
@@ -25,9 +24,11 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
         key = String::New("media-next-track");
         break;
       default:
-        fprintf(stderr, "Got unknown key: %d\n", key_type);
+        fprintf(stderr, "Got unknown key: %d\n", g_key);
         return;
     }
+
+    uv_rwlock_rdunlock(&g_lock);
 
     Handle<Value> argv[] = {
       key,
@@ -50,10 +51,8 @@ void PostKey(KEY_TYPE key)
 
   uv_rwlock_wrlock(&g_lock);
 
-  void *data = (void *)&key;
-  g_async.data = data;
-  printf("data1: %d\n", *(KEY_TYPE *)data);
-  printf("data2: %d\n", *(KEY_TYPE *)g_async.data);
+  // XXX: global
+  g_key = key;
   uv_async_send(&g_async);
 
   uv_rwlock_wrunlock(&g_lock);
