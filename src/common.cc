@@ -62,6 +62,7 @@ void WakeupNewThread() {
 
 void PostKeyAndWait(KEY_TYPE key)
 {
+  // FIXME should not pass args by setting global
   g_key = key;
   printf("PostKeyAndWait: %d\n", key);
 
@@ -76,5 +77,12 @@ NAN_METHOD(SetCallback) {
     return NanThrowTypeError("Function required");
 
   NanAssignPersistent(Function, g_callback, Handle<Function>::Cast(args[0]));
+
+  // XXX immediately attempt to call callback
+  Handle<String> arg = String::New("test");
+  Handle<Value> argv[] = { arg, };
+  NanPersistentToLocal(g_callback)->Call(
+    Context::GetCurrent()->Global(), 1, argv);
+
   NanReturnUndefined();
 }
