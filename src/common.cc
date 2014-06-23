@@ -9,7 +9,7 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
 
   if (!g_callback.IsEmpty()) {
     uv_rwlock_rdlock(&g_lock);
-    KEY_TYPE key_type = *(KEY_TYPE *)handle->data;
+    KEY_TYPE key_type = *(KEY_TYPE *)g_async.data;
     printf("MakeCallbackInMainThread key_type: %d\n", key_type);
     uv_rwlock_rdunlock(&g_lock);
 
