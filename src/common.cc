@@ -6,37 +6,34 @@ static Persistent<Function> g_callback;
 static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   NanScope();
 
-  printf("MakeCallbackInMainThread()\n");
-  printf("MakeCallbackInMainThread data: %d\n", (KEY_TYPE *)handle->data);
-
-/*
-  if (!g_callback.IsEmpty()) {
-    Handle<String> key;
-    printf("MakeCallbackInMainThread, g_key: %d\n", g_key);
-    switch (g_key) {
-      case KEY_PLAYPAUSE:
-        key = String::New("media-play-pause");
-        break;
-      case KEY_PREVIOUS:
-        key = String::New("media-previous-track");
-        break;
-      case KEY_NEXT:
-        key = String::New("media-next-track");
-        break;
-      default:
-        fprintf(stderr, "Got unknown key: %d\n", g_key);
-        return;
-    }
-
-    Handle<Value> argv[] = {
-        key,
-    };
-    NanPersistentToLocal(g_callback)->Call(
-        Context::GetCurrent()->Global(), 1, argv);
-  } else {
-    printf("g_callback.IsEmpty() == true");
+  if (g_callback.IsEmpty()) {
+    return;
   }
-*/
+
+  KEY_TYPE key_type = *(KEY_TYPE *)handle->data;
+  printf("MakeCallbackInMainThread key_type: %d\n", (KEY_TYPE *)handle->data);
+
+  Handle<String> key;
+  switch (key_type) {
+    case KEY_PLAYPAUSE:
+      key = String::New("media-play-pause");
+      break;
+    case KEY_PREVIOUS:
+      key = String::New("media-previous-track");
+      break;
+    case KEY_NEXT:
+      key = String::New("media-next-track");
+      break;
+    default:
+      fprintf(stderr, "Got unknown key: %d\n", key_type);
+      return;
+  }
+
+  Handle<Value> argv[] = {
+    key,
+  };
+  NanPersistentToLocal(g_callback)->Call(
+      Context::GetCurrent()->Global(), 1, argv);
 }
 
 void CommonInit() {
@@ -46,7 +43,7 @@ void CommonInit() {
 void PostKey(KEY_TYPE key)
 {
   printf("PostKey: %d\n", key);
-  g_async.data = (void *)key;
+  g_async.data = (void *)&key;
 
   uv_async_send(&g_async);
 }
