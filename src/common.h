@@ -4,9 +4,6 @@
 #include "nan.h"
 using namespace v8;
 
-void CommonInit();
-void PlatformInit();
-
 enum KEY_TYPE {
     KEY_NONE,
     KEY_PLAYPAUSE,
@@ -14,8 +11,8 @@ enum KEY_TYPE {
     KEY_NEXT,
 };
 
-void WaitForMainThread();
-void WakeupNewThread();
+void CommonInit();
+void PlatformInit();
 void PostKey(KEY_TYPE key);
 
 NAN_METHOD(SetCallback);

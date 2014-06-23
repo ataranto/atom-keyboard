@@ -4,7 +4,6 @@ static HHOOK g_hhook;
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
   KBDLLHOOKSTRUCT *s = (KBDLLHOOKSTRUCT *)lParam;
-  printf("vkCode: %d\n", s->vkCode);
 
   if (wParam == WM_KEYDOWN) {
     KEY_TYPE key = KEY_NONE;
