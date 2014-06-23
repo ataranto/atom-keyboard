@@ -43,8 +43,10 @@ void CommonInit() {
 void PostKey(KEY_TYPE key)
 {
   printf("PostKey: %d\n", key);
-  KEY_TYPE k = key;
-  g_async.data = (void *)&k;
+
+  void *data = (void *)&key;
+  printf("data1: %d", *(KEY_TYPE *)data);
+  g_async.data = data;
 
   uv_async_send(&g_async);
 }
