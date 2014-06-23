@@ -10,11 +10,11 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
     return;
   }
 
-  KEY_TYPE *key_type = (KEY_TYPE *)handle->data;
-  printf("MakeCallbackInMainThread key_type: %d\n", *key_type);
+  KEY_TYPE key_type = *(KEY_TYPE *)handle->data;
+  printf("MakeCallbackInMainThread key_type: %d\n", key_type);
 
   Handle<String> key;
-  switch (*key_type) {
+  switch (key_type) {
     case KEY_PLAYPAUSE:
       key = String::New("media-play-pause");
       break;
