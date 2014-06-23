@@ -1,5 +1,6 @@
 #include "common.h"
 
+static uv_rwlock_t g_lock;
 static uv_async_t g_async;
 static Persistent<Function> g_callback;
 
@@ -7,11 +8,10 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   NanScope();
 
   if (!g_callback.IsEmpty()) {
+    uv_rwlock_rdlock(&g_lock);
     KEY_TYPE key_type = *(KEY_TYPE *)handle->data;
     printf("MakeCallbackInMainThread key_type: %d\n", key_type);
-
-    key_type = *(KEY_TYPE *)g_async.data;
-    printf("MakeCallbackInMainThread other key_type: %d", key_type);
+    uv_rwlock_rdunlock(&g_lock);
 
     Handle<String> key;
     switch (key_type) {
@@ -40,6 +40,7 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
 }
 
 void CommonInit() {
+  uv_rwlock_init(&g_lock);
   uv_async_init(uv_default_loop(), &g_async, MakeCallbackInMainThread);
 }
 
@@ -47,10 +48,14 @@ void PostKey(KEY_TYPE key)
 {
   printf("PostKey: %d\n", key);
 
+  uv_rwlock_wrlock(&g_lock);
+
   void *data = (void *)
   g_async.data = (void *)&key;
   printf("data: %d\n", *(KEY_TYPE *)data);
   uv_async_send(&g_async);
+
+  uv_rwlock_wrunlock(&g_lock);
 }
 
 NAN_METHOD(SetCallback) {
