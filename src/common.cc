@@ -50,9 +50,10 @@ void PostKey(KEY_TYPE key)
 
   uv_rwlock_wrlock(&g_lock);
 
-  void *data = (void *)
-  g_async.data = (void *)&key;
-  printf("data: %d\n", *(KEY_TYPE *)data);
+  void *data = (void *)&key;
+  g_async.data = data;
+  printf("data1: %d\n", *(KEY_TYPE *)data);
+  printf("data2: %d\n", *(KEY_TYPE *)g_async.data);
   uv_async_send(&g_async);
 
   uv_rwlock_wrunlock(&g_lock);
