@@ -11,7 +11,7 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   }
 
   KEY_TYPE key_type = *(KEY_TYPE *)handle->data;
-  printf("MakeCallbackInMainThread key_type: %d\n", (KEY_TYPE *)handle->data);
+  printf("MakeCallbackInMainThread key_type: %d\n", key_type);
 
   Handle<String> key;
   switch (key_type) {
