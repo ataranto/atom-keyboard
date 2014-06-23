@@ -1,7 +1,6 @@
 #include "common.h"
 
 static uv_async_t g_async;
-static uv_sem_t g_semaphore;
 static Persistent<Function> g_callback;
 
 static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
@@ -10,6 +9,9 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   if (!g_callback.IsEmpty()) {
     KEY_TYPE key_type = *(KEY_TYPE *)handle->data;
     printf("MakeCallbackInMainThread key_type: %d\n", key_type);
+
+    key_type = *(KEY_TYPE *)g_async.data;
+    printf("MakeCallbackInMainThread other key_type: %d", key_type);
 
     Handle<String> key;
     switch (key_type) {
@@ -35,25 +37,20 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   } else {
     printf("g_callback.IsEmpty() == true\n");
   }
-
-  uv_sem_post(&g_semaphore);
 }
 
 void CommonInit() {
-  uv_sem_init(&g_semaphore, 0);
   uv_async_init(uv_default_loop(), &g_async, MakeCallbackInMainThread);
-
-  uv_sem_post(&g_semaphore);
 }
 
 void PostKey(KEY_TYPE key)
 {
   printf("PostKey: %d\n", key);
 
+  void *data = (void *)
   g_async.data = (void *)&key;
+  printf("data: %d\n", *(KEY_TYPE *)data);
   uv_async_send(&g_async);
-
-  uv_sem_wait(&g_semaphore);
 }
 
 NAN_METHOD(SetCallback) {
