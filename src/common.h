@@ -16,7 +16,7 @@ enum KEY_TYPE {
 
 void WaitForMainThread();
 void WakeupNewThread();
-void PostKeyAndWait(KEY_TYPE key);
+void PostKey(KEY_TYPE key);
 
 NAN_METHOD(SetCallback);
 

@@ -42,10 +42,10 @@ void CommonInit() {
   uv_async_init(uv_default_loop(), &g_async, MakeCallbackInMainThread);
 }
 
-void PostKeyAndWait(KEY_TYPE key)
+void PostKey(KEY_TYPE key)
 {
-  printf("PostKeyAndWait: %d\n", key);
-  g_async.data = (void *)&key;
+  printf("PostKey: %d\n", key);
+  g_async.data = (void *)key;
 
   uv_async_send(&g_async);
 }

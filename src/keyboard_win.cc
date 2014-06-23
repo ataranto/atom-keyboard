@@ -26,7 +26,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     }
 
     if (key != KEY_NONE) {
-      PostKeyAndWait(key);
+      PostKey(key);
     }
   }
 
