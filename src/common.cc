@@ -1,19 +1,14 @@
 #include "common.h"
 
 static uv_async_t g_async;
-static uv_sem_t g_semaphore;
-static uv_thread_t g_thread;
-
-static KEY_TYPE g_key;
 static Persistent<Function> g_callback;
-
-static void CommonThread(void* handle) {
-  WaitForMainThread();
-}
 
 static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   NanScope();
 
+  printf("MakeCallbackInMainThread: %s\n", handle->data);
+
+/*
   if (!g_callback.IsEmpty()) {
     Handle<String> key;
     printf("MakeCallbackInMainThread, g_key: %d\n", g_key);
@@ -40,34 +35,19 @@ static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   } else {
     printf("g_callback.IsEmpty() == true");
   }
-
-  WakeupNewThread();
+*/
 }
 
 void CommonInit() {
-  uv_sem_init(&g_semaphore, 0);
   uv_async_init(uv_default_loop(), &g_async, MakeCallbackInMainThread);
-  uv_thread_create(&g_thread, &CommonThread, NULL);
-}
-
-void WaitForMainThread() {
-  uv_sem_wait(&g_semaphore);
-}
-
-void WakeupNewThread() {
-  printf("WakeupNewThread before\n");
-  uv_sem_post(&g_semaphore);
-  printf("WakeupNewThread after\n");
 }
 
 void PostKeyAndWait(KEY_TYPE key)
 {
-  // FIXME should not pass args by setting global
-  g_key = key;
   printf("PostKeyAndWait: %d\n", key);
+  g_async.data = (void *)&key;
 
   uv_async_send(&g_async);
-  WaitForMainThread();
 }
 
 NAN_METHOD(SetCallback) {

@@ -36,6 +36,4 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 void PlatformInit() {
   HMODULE hModule = GetModuleHandle(0);
   g_hhook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hModule, NULL);
-  
-  WakeupNewThread();
 }
