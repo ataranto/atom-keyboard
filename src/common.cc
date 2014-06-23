@@ -6,7 +6,8 @@ static Persistent<Function> g_callback;
 static void MakeCallbackInMainThread(uv_async_t* handle, int status) {
   NanScope();
 
-  printf("MakeCallbackInMainThread: %s\n", handle->data);
+  printf("MakeCallbackInMainThread()\n", handle->data);
+  printf("MakeCallbackInMainThread data: %d\n", *(KEY_TYPE *)handle->data);
 
 /*
   if (!g_callback.IsEmpty()) {
