@@ -3,6 +3,7 @@
 static HHOOK g_hhook;
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+  LRESULT result = CallNextHookEx(g_hhook, nCode, wParam, lParam);
   KBDLLHOOKSTRUCT *s = (KBDLLHOOKSTRUCT *)lParam;
 
   if (wParam == WM_KEYDOWN) {
@@ -29,10 +30,11 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     }
   }
 
-  return CallNextHookEx(g_hhook, nCode, wParam, lParam);
+  return result;
 }
 
 void PlatformInit() {
   HMODULE hModule = GetModuleHandle(0);
-  g_hhook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hModule, NULL);
+  DWORD threadId = GetCurrentThreadId();
+  g_hhook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hModule, threadId);
 }
