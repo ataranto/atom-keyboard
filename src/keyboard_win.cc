@@ -3,8 +3,8 @@
 static HHOOK g_hhook;
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
-  LRESULT result = CallNextHookEx(g_hhook, nCode, wParam, lParam);
   KBDLLHOOKSTRUCT *s = (KBDLLHOOKSTRUCT *)lParam;
+  LRESULT result = CallNextHookEx(g_hhook, nCode, wParam, lParam);
 
   if (wParam == WM_KEYDOWN) {
     KEY_TYPE key = KEY_NONE;
