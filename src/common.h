@@ -5,10 +5,10 @@
 using namespace v8;
 
 enum KEY_TYPE {
-    KEY_NONE,
-    KEY_PLAYPAUSE,
-    KEY_PREVIOUS,
-    KEY_NEXT,
+  KEY_NONE,
+  KEY_PLAYPAUSE,
+  KEY_PREVIOUS,
+  KEY_NEXT,
 };
 
 void CommonInit();

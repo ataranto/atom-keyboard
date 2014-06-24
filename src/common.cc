@@ -16,27 +16,25 @@ static void Callback(uv_async_t* handle, int status) {
 
   Handle<String> key;
   switch (g_key) {
-      case KEY_PLAYPAUSE:
-          key = String::New("media-play-pause");
-          break;
-      case KEY_PREVIOUS:
-          key = String::New("media-previous-track");
-          break;
-      case KEY_NEXT:
-          key = String::New("media-next-track");
-          break;
-      default:
-          fprintf(stderr, "Got unknown key: %d\n", g_key);
-          return;
+    case KEY_PLAYPAUSE:
+      key = String::New("media-play-pause");
+      break;
+    case KEY_PREVIOUS:
+      key = String::New("media-previous-track");
+      break;
+    case KEY_NEXT:
+      key = String::New("media-next-track");
+      break;
+    default:
+      fprintf(stderr, "Got unknown key: %d\n", g_key);
+      return;
   }
 
   uv_rwlock_rdunlock(&g_rwlock);
 
-  Handle<Value> argv[] = {
-      key,
-  };
+  Handle<Value> argv[] = { key };
   NanPersistentToLocal(g_callback)->Call(
-          Context::GetCurrent()->Global(), 1, argv);
+    Context::GetCurrent()->Global(), 1, argv);
 }
 
 void CommonInit() {
